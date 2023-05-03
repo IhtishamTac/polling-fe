@@ -6,9 +6,12 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/home',
+      path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta:{
+        auth:true
+      }
     },
     {
       path: '/about',
@@ -19,30 +22,44 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/',
+      path: '/login',
       name: 'login',
       component: LoginView
     },
     {
       path: '/poll',
       name: 'poll',
-      component: () => import('../views/PollView.vue')
+      component: () => import('../views/PollView.vue'),
+      meta:{
+        auth:true
+      }
     },
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/'];
-  const authRequired = !publicPages.includes(to.path); 
+  // const publicPages = ['/'];
+  // const authRequired = !publicPages.includes(to.path); 
   const access_token = localStorage.getItem('access_token'); 
   const isAuthenticated = access_token != null; 
 
-  if (authRequired && !isAuthenticated) { 
-    next('/'); 
-  } else if (to.path === '/' && isAuthenticated) { 
-    next('/home'); 
+  // if (authRequired && !isAuthenticated) { 
+  //   next('/'); 
+  // } else if (to.path === '/' && isAuthenticated) { 
+  //   next('/home'); 
+  // } else {
+  //   next();
+  // }
+  if (to.matched.some(e => e.meta.auth)) {
+    if (isAuthenticated) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else if (to.fullPath === '/login' && isAuthenticated) {
+    router.back()
   } else {
-    next();
+    next()
   }
 });
 

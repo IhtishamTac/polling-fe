@@ -74,7 +74,7 @@ export default {
             .then(() => {
               console.log("Logout successful");
               localStorage.removeItem('access_token')
-              this.$router.push("/");
+              this.$router.push("/login");
             })
             .catch((err) => {
               this.$swal({

@@ -27,7 +27,7 @@ import NavComponent from "../components/NavComponent.vue";
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary">Add Poll</button>
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" id="cancelz">Cancel</button>
                 </div>
             </div>
         </div>
@@ -81,6 +81,12 @@ export default {
         return {
             polls:[],
             token: localStorage.getItem("access_token"),
+            pollData:{
+                title:'',
+                description:'',
+                deadline:'',
+                choices:[''],
+            }
         }
     },
     mounted() {
@@ -128,7 +134,23 @@ export default {
             })
         },
         async addPoll(){
-
+            const headers = {
+                Authorization: 'Bearer ' + this.token
+            }
+           await axios.post("poll",{
+              ...this.pollData
+           },{headers}).then(()=>{
+              this.$router.push('/poll')
+              document.getElementById('cancelz').click()
+              this.pollData = {}
+              this.pollData.choices = []
+              this.getPoll()
+           }).catch((err)=>{
+              this.$swal({
+                'icon':'error',
+                'text':err
+              })
+           })
         }
     },
 }

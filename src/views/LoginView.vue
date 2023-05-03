@@ -1,17 +1,4 @@
-<style>
-@import '../../src/assets/css/bootstrap.min.css';
 
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-a{
-    text-decoration: none;
-}
-.forgot{
-    font-size: 13px;
-}
-</style>
 <template>
   <main>
     <div class="container mt-5">
@@ -42,6 +29,20 @@ a{
 <script setup>
 import '../../src/assets/js/bootstrap.min.js';
 </script>
+<style>
+@import '../../src/assets/css/bootstrap.min.css';
+
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+a{
+    text-decoration: none;
+}
+.forgot{
+    font-size: 13px;
+}
+</style>
 <script>
 import axios from "axios";
 export default {
@@ -67,7 +68,7 @@ export default {
                 if (res && res.status == 200){
                     console.log('Successfully logged in');
                     localStorage.setItem('access_token', res.data.access_token);
-                    this.$router.push('/home')
+                    this.$router.push('/')
                 }
             }catch(err){
                 this.$swal({
