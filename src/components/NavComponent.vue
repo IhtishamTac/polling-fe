@@ -3,11 +3,28 @@
     <div class="container-fluid">
         <ul id="menuz" class="navbar-nav">
       <li class="nav-item"><a href="#" class="nav-link">
-        <RouterLink to="/home" style="text-decoration:none; color: black;"><b>Home</b></RouterLink>
+        <RouterLink to="/" style="text-decoration:none; color: black;"><b>Home</b></RouterLink>
         </a></li>
       <li class="nav-item"><a href="#" class="nav-link" v-if="this.user.role === 'admin'">
         <RouterLink to="/poll" style="text-decoration:none; color: black;" >Poll</RouterLink>
         </a></li>
+        <li data-bs-target="#success" data-bs-toggle="modal"><a href="#"  style="text-decoration:none; color: black;" >Tes</a></li>
+        <div class="modal fade" id="success">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+
+              </div>
+            <div class="modal-body">
+              <h1 style="text-align: center;" class="badge bg-danger w-100">Error</h1>
+              <p style="text-align: center;">An Error Occured! Please Contact Admin</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" data-bs-dismiss="modal" >Ok</button>
+            </div>
+          </div>
+          </div>
+        </div>
     </ul>
     </div>
     <div class="nav-nav">
