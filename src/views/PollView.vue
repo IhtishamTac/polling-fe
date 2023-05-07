@@ -51,7 +51,7 @@ import NavComponent from "../components/NavComponent.vue";
                 class="form-control"
                 v-model="pollData.choices[id]"
               />
-              
+
               <button
                 class="btn btn-danger"
                 @click="pollData.choices.pop()"
@@ -61,11 +61,11 @@ import NavComponent from "../components/NavComponent.vue";
               </button>
             </div>
             <button
-                class="btn btn-warning w-100"
-                @click="pollData.choices.push('')"
-              >
-                Add
-              </button>
+              class="btn btn-warning w-100"
+              @click="pollData.choices.push('')"
+            >
+              Add
+            </button>
           </div>
           <div class="modal-footer">
             <button class="btn btn-primary" @click="addPoll">Add Poll</button>
@@ -123,24 +123,55 @@ import NavComponent from "../components/NavComponent.vue";
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-body">
-                        <label for="titles">Title <b>:</b> <p><b>{{ detailPollData.title }}</b></p></label><br>
-                        <label for="description">Description <b>:</b><p><b>{{ detailPollData.description }}</b></p></label><br>
-                        <label for="deadline">Deadline <b>:</b><br>
-                            <div class="badge" :class="{
-                                'bg-warning': new Date(detailPollData.deadline) > new Date(),
-                                'text-dark': new Date(detailPollData.deadline) > new Date(),
-                                'bg-danger': new Date(detailPollData.deadline) < new Date(),
-                            }"><b>{{ detailPollData.deadline }}</b></div>
-                        </label><br>
-                        <label for="choice">Choices <b>:</b></label><br>
+                        <label for="titles"
+                          >Title <b>:</b>
+                          <p>
+                            <b>{{ detailPollData.title }}</b>
+                          </p></label
+                        ><br />
+                        <label for="description"
+                          >Description <b>:</b>
+                          <p>
+                            <b>{{ detailPollData.description }}</b>
+                          </p></label
+                        ><br />
+                        <label for="deadline"
+                          >Deadline <b>:</b><br />
+                          <div
+                            class="badge"
+                            :class="{
+                              'bg-warning':
+                                new Date(detailPollData.deadline) > new Date(),
+                              'text-dark':
+                                new Date(detailPollData.deadline) > new Date(),
+                              'bg-danger':
+                                new Date(detailPollData.deadline) < new Date(),
+                            }"
+                          >
+                            <b>{{ detailPollData.deadline }}</b>
+                          </div> </label
+                        ><br />
+                        <label for="choice">Choices <b>:</b></label
+                        ><br />
                         <div class="">
-                            <div class="" v-for="choice in detailPollData.choices" :key="choice.id" >
-                                <span><b>{{ choice.choices + ', '}}</b></span>
-                            </div>
+                          <div
+                            class=""
+                            v-for="choice in detailPollData.choices"
+                            :key="choice.id"
+                          >
+                            <span
+                              ><b>{{ choice.choices + ", " }}</b></span
+                            >
+                          </div>
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Cancel
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -161,11 +192,10 @@ import NavComponent from "../components/NavComponent.vue";
 .actions-button {
   text-align: right;
 }
-.modal-body{
+.modal-body {
   text-align: left;
 }
 </style>
-
 <script>
 import axios from "axios";
 export default {
@@ -256,6 +286,23 @@ export default {
           { headers }
         )
         .then(() => {
+          const headers = {
+            Authorization: "Bearer " + this.token,
+          };
+          axios
+            .get("poll", {
+              headers,
+            })
+            .then((res) => {
+              this.polls = res.data.data;
+            })
+            .catch((err) => {
+              this.$swal({
+                icon: "error",
+                title: "Oopss!",
+                text: err,
+              });
+            });
           this.$router.push("/poll");
           document.getElementById("cancelz").click();
           this.pollData = {};

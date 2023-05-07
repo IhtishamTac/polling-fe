@@ -5,19 +5,35 @@ import NavComponent from "../components/NavComponent.vue";
   <NavComponent></NavComponent>
   <div class="container mt-5">
     <div class="row">
-      <div class="col-3" >
+      <div class="col-3" v-for="poll in polls" :key="poll.id">
         <div class="card">
           <div class="card-body">
-            <div class="card-title" v-for="poll in polls" :key="poll.id">
-              <h4>{{ poll.title }}</h4><hr>
+            <div class="card-title">
+              <h4>{{ poll.title }}</h4>
+              <hr />
               Deadline :
               <div class="badge bg-warning w-100 text-dark">
-                {{ poll.deadline   }}
+                {{ poll.deadline }}
               </div>
-            </div>
-            <h5>Pilihan Anda :</h5><br>
-            <div v-for="choice in polls.choices" :key="choice.id">
-              <span>{{ choice.choices }}</span>
+              <h5>Pilihan Anda :</h5>
+              <br />
+              <div class="" v-for="choice in poll.choices" :key="choice.id">
+                <input
+                  type="radio"
+                  name="choices"
+                  :value="choice.id"
+                  @click="vote(poll.id, choice.id)"
+                />
+                <span
+                  ><b>{{ choice.choices + ", " }}</b></span
+                ><br />
+                <span
+                  class="badge bg-secondary"
+                  :style="{ width: (choice.percentage || 0) + '%' }"
+                >
+                  {{ choice.percentage || 0 }} %</span
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -52,6 +68,39 @@ export default {
           text: err,
         });
       });
+  },
+  computed: {
+    UserId() {
+      return localStorage.getItem("user_id");
+    },
+  },
+  methods: {
+    async vote(poll_id, choice_id) {
+      const headers = {
+        Authorization: "Bearer " + this.token,
+      };
+      await axios
+        .post(`poll/${poll_id}/vote/${choice_id}`, {}, { headers })
+        .then(() => {
+          axios
+            .get("poll", { headers })
+            .then((res) => {
+              this.polls = res.data.data;
+            })
+            .catch((err) => {
+              this.$swal({
+                icon: "error",
+                text: err,
+              });
+            });
+        })
+        .catch((err) => {
+          this.$swal({
+            icon: "warning",
+            text: err.response.data.message,
+          });
+        });
+    },
   },
 };
 </script>

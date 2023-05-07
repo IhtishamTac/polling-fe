@@ -8,7 +8,7 @@
       <li class="nav-item"><a href="#" class="nav-link" v-if="this.user.role === 'admin'">
         <RouterLink to="/poll" style="text-decoration:none; color: black;" >Poll</RouterLink>
         </a></li>
-        <li data-bs-target="#success" data-bs-toggle="modal"><a href="#"  style="text-decoration:none; color: black;" >Tes</a></li>
+        <!-- <li data-bs-target="#success" data-bs-toggle="modal"><a href="#"  style="text-decoration:none; color: black;" >Tes</a></li> -->
         <div class="modal fade" id="success">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -16,7 +16,7 @@
 
               </div>
             <div class="modal-body">
-              <h1 style="text-align: center;" class="badge bg-danger w-100">Error</h1>
+              <h1 class="bg-danger rounded-2 p-2 text-center">Error</h1>
               <p style="text-align: center;">An Error Occured! Please Contact Admin</p>
             </div>
             <div class="modal-footer">
@@ -56,6 +56,7 @@ export default {
             headers
         }).then((resp)=>{
             this.user = resp.data.user
+            localStorage.setItem("user_id", resp.data.user.id)
         }).catch((err)=>{
             this.$swal({
                 icon: "error",
@@ -93,12 +94,10 @@ export default {
               localStorage.removeItem('access_token')
               this.$router.push("/login");
             })
-            .catch((err) => {
-              this.$swal({
-                icon: "error",
-                title: "Oops! Something went wrong",
-                text: err.response.data.message,
-              });
+            .catch(() => {
+              var modal =  window.document.getElementById("success");
+              var success = new window.bootstrap.Modal(modal);
+              success.show();
             });
         }
       });
